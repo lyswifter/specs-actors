@@ -99,6 +99,8 @@ func (st *State) updateToNextEpoch(currRealizedPower abi.StoragePower) {
 		st.EffectiveNetworkTime++
 		st.EffectiveBaselinePower = BaselinePowerFromPrev(st.EffectiveBaselinePower)
 		st.CumsumBaseline = big.Add(st.CumsumBaseline, st.EffectiveBaselinePower)
+
+		log.Infow("update effective network time", "epoch", st.Epoch, "st.EffectiveNetworkTime", st.EffectiveNetworkTime)
 	}
 }
 
@@ -106,9 +108,12 @@ func (st *State) updateToNextEpoch(currRealizedPower abi.StoragePower) {
 // and updates reward state to track reward for the next epoch
 func (st *State) updateToNextEpochWithReward(currRealizedPower abi.StoragePower) {
 	prevRewardTheta := ComputeRTheta(st.EffectiveNetworkTime, st.EffectiveBaselinePower, st.CumsumRealized, st.CumsumBaseline)
+	log.Infow("before update epoch", "epoch", st.Epoch, "st.EffectiveNetworkTime", st.EffectiveNetworkTime,
+		"st.CumsumRealized", st.CumsumRealized, "st.ThisEpochBaselinePower", st.ThisEpochBaselinePower, "prevRewardTheta", prevRewardTheta)
 	st.updateToNextEpoch(currRealizedPower)
 	currRewardTheta := ComputeRTheta(st.EffectiveNetworkTime, st.EffectiveBaselinePower, st.CumsumRealized, st.CumsumBaseline)
-
+	log.Infow("after update epoch", "epoch", st.Epoch, "st.EffectiveNetworkTime", st.EffectiveNetworkTime,
+		"st.CumsumRealized", st.CumsumRealized, "st.ThisEpochBaselinePower", st.ThisEpochBaselinePower, "currRewardTheta", currRewardTheta)
 	st.ThisEpochReward = computeReward(st.Epoch, prevRewardTheta, currRewardTheta, st.SimpleTotal, st.BaselineTotal)
 }
 

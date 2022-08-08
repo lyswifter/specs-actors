@@ -9,10 +9,14 @@ import (
 	reward0 "github.com/filecoin-project/specs-actors/actors/builtin/reward"
 	"github.com/ipfs/go-cid"
 
+	logging "github.com/ipfs/go-log/v2"
+
 	"github.com/filecoin-project/specs-actors/v7/actors/builtin"
 	"github.com/filecoin-project/specs-actors/v7/actors/runtime"
 	"github.com/filecoin-project/specs-actors/v7/actors/util/smoothing"
 )
+
+var log = logging.Logger("rewardV8")
 
 // PenaltyMultiplier is the factor miner penaltys are scaled up by
 const PenaltyMultiplier = 3
